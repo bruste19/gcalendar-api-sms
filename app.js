@@ -40,7 +40,7 @@ function sendSms(message, destinationNumber) {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ "from": process.env.HOST_NUMBER, "to": `+33${destinationNumber}`, "content": message })
+        body: JSON.stringify({ "from": process.env.HOST_NUMBER, "to": `${destinationNumber}`, "content": message })
     })
     .then(res => res.json())
     .then((data) => console.log(data));
