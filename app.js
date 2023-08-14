@@ -31,9 +31,12 @@ app.post('/webhook', function (req, res) {
  * @param {string} destinationNumber - French phone number
  */
 function sendSms(message, destinationNumber) {
+
+    const basePath = "https://api.httpsms.com/v1"
+
     console.log(message, destinationNumber);
 
-    fetch('https://api.httpsms.com/v1/messages/send', {
+    fetch(`${basePath}/messages/send`, {
         method: 'POST',
         headers: {
             'x-api-key': apiKey,
@@ -51,15 +54,13 @@ function parseMessage(event) {
     let messageTemplate = (name, startTime) => `Bonjour Mr/Mme. ${name}\nCeci est un message automatique pour vous rappeler votre rendez-vous de kinésithérapie aujourd'hui à ${startTime}`
     
     let patientName = event?.title?.match(/\(([^)]+)\)/)[1];
-    let phoneNumber = event?.description?.split("\n").pop();
-    let startTime = event?.startTime?.split("at")?.pop()?.trim();
+    let phoneNumber = event?.description?.split("\n")[3]; 
+    let startTime   = event?.startTime?.split("at")?.pop()?.trim();
 
     return { message: messageTemplate(patientName, startTime), phoneNumber: phoneNumber }
 };
 
-
-app.listen(port, function () {
-   console.log(`Example app listening at ${port}`);
-})
-
-
+/**
+ * Start server
+ */
+app.listen(port, () => { console.log(`Sms server running at ${port}`)});
